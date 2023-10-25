@@ -1,7 +1,7 @@
 #[macro_use] extern crate rocket;
 
 mod services;
-use services::superheroes;
+use services::superheroes::spiderman;
 
 #[get("/")]
 fn index() -> &'static str {
@@ -10,7 +10,7 @@ fn index() -> &'static str {
 
 #[post("/spiderman/attack/<villain>")]
 fn spiderman_thwip(villain: &str) -> String {
-    superheroes::spiderman::thwip(villain)
+    spiderman::thwip(villain)
 }
 
 #[launch]
