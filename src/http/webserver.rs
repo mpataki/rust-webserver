@@ -6,8 +6,17 @@ use rocket::{
     routes
 };
 
+use utoipa::OpenApi;
+use utoipa_swagger_ui::SwaggerUi;
 use crate::services::superheroes::spiderman;
 
+#[utoipa::path(
+    get,
+    path = "/",
+    responses(
+        (status = 200, description = "Hello, world!")
+    ),
+)]
 #[get("/")]
 fn index() -> &'static str {
     "Hello, world!"
@@ -18,10 +27,21 @@ fn spiderman_thwip(villain: &str) -> String {
     spiderman::thwip(villain)
 }
 
+#[derive(OpenApi)]
+#[openapi(
+    paths(
+        index
+    ),
+)]
+struct ApiDoc;
+
 pub async fn start_webserver() -> Result<Rocket<Ignite>, rocket::Error> {
     let rocket = rocket::build()
         .mount("/", routes![index])
-        .mount("/superheroes", routes![spiderman_thwip]);
+        .mount("/superheroes", routes![spiderman_thwip])
+        .mount("/", SwaggerUi::new("/swagger-ui/<_..>")
+               .url("/api-docs/openapi.json", ApiDoc::openapi()),
+        );
 
     rocket.launch().await
 }
