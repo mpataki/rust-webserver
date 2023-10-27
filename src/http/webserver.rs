@@ -8,7 +8,7 @@ use rocket::{
 
 use utoipa::OpenApi;
 use utoipa_swagger_ui::SwaggerUi;
-use crate::services::superheroes::spiderman;
+use crate::service::superheroes::spiderman;
 
 #[utoipa::path(
     get,
@@ -35,7 +35,7 @@ fn spiderman_thwip(villain: &str) -> String {
 )]
 struct ApiDoc;
 
-pub async fn start_webserver() -> Result<Rocket<Ignite>, rocket::Error> {
+pub async fn start() -> Result<Rocket<Ignite>, rocket::Error> {
     let rocket = rocket::build()
         .mount("/", routes![index])
         .mount("/superheroes", routes![spiderman_thwip])
